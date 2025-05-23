@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>HashGames - AI Game Maker</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <div id="editorContainer">
+    <h1>HashGames - AI Game Maker</h1>
+    <p>Describe the game you want to create:</p>
+    <textarea id="gamePrompt" placeholder="Example: A clicker game where you click coins to earn points."></textarea>
+    <button onclick="generateGame()">Generate Game</button>
+  </div>
+
+  <div id="gameArea">
+    <p><strong>Generated Game:</strong></p>
+    <button class="copy-btn" onclick="copyCode()">Copy Code</button>
+    <pre id="generatedCode"></pre>
+    <iframe id="gamePreview"></iframe>
+  </div>
+
+  <script>
+    function generateGame() {
+      const prompt = document.getElementById('gamePrompt').value.toLowerCase();
+      const codeDisplay = document.getElementById('generatedCode');
+      const gamePreview = document.getElementById('gamePreview');
+
+      let gameCode = '';
+
+      if (prompt.includes("clicker")) {
+        gameCode = `<!DOCTYPE html><html><body style='margin:0;font-family:sans-serif;'><p id='score'>Score: 0</p><button onclick='score++;
+        document.getElementById("score").textContent = "Score: " + score;'>Click Me!</button><script>let score = 0;<\/script></body></html>`;
+      } else if (prompt.includes("platform")) {
+        gameCode = `<!DOCTYPE html><html><body style='margin:0;font-family:sans-serif;'><p>Platformer placeholder</p></body></html>`;
+      } else {
+        gameCode = `<html><body><p>Sorry, I couldn't understand your game type.</p></body></html>`;
+      }
+
+      codeDisplay.textContent = gameCode;
+      gamePreview.srcdoc = gameCode;
+    }
+
+    function copyCode() {
+      const code = document.getElementById("generatedCode").textContent;
+      navigator.clipboard.writeText(code).then(() => alert("Code copied to clipboard!"));
+    }
+  </script>
+<script type="module">
+  import { chat } from "https://cdn.jsdelivr.net/npm/@mlc-ai/web-llm";
+
+  async function generateWithAI(prompt) {
+    const result = await chat.completion({
+      messages: [
+        { role: "system", content: "You are the number 1 AI game generator made by Jonathanaft. Code HTML/JS programs based on promopts you get from the user. },
+        { role: "user", content: prompt }
+      ]
+    });
+    return result.choices[0].message.content;
+  }
+
+  async function generateGame() {
+    const prompt = document.getElementById('gamePrompt').value;
+    const container = document.getElementById('gameContainer');
+    container.innerHTML = "<p>Generating game using AI...</p>";
+
+    const code = await generateWithAI(prompt);
+    container.innerHTML = "<iframe sandbox='allow-scripts' style='width:100%; height:400px; border:none;' srcdoc=\"" + 
+                          code.replace(/"/g, '&quot;') + "\"></iframe>";
+  }
+</script>
+
+</body>
+</html>
