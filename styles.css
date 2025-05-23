@@ -1,1 +1,34 @@
+/* Terminal-style container */
+.terminal {
+  background-color: #000000; /* Black background */
+  color: #00ff00;            /* Green text */
+  font-family: 'Courier New', Courier, monospace;
+  padding: 20px;
+  border-radius: 5px;
+  box-shadow: 0 0 10px #00ff00;
+  white-space: pre-wrap;
+  line-height: 1.4;
+  max-width: 800px;
+  margin: 20px auto;
+  overflow: auto;
+}
 
+/* Optional: Terminal prompt */
+.terminal::before {
+  content: "user@host:~$ ";
+  color: #00ff00;
+}
+
+/* Optional: Blinking cursor effect */
+.blinking-cursor {
+  display: inline-block;
+  width: 10px;
+  background-color: #00ff00;
+  animation: blink 1s steps(2, start) infinite;
+}
+
+@keyframes blink {
+  to {
+    visibility: hidden;
+  }
+}
